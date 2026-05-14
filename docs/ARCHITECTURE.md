@@ -12,7 +12,7 @@
 
 ## Prisma schema
 
-`prisma/schema.prisma` stores Tasks, Events, ScheduleBlocks, and DayState in SQLite. Enums are represented as strings for easy future enum evolution.
+`prisma/schema.prisma` stores Tasks, Events, ScheduleBlocks, and DayState in SQLite. Prisma 7 keeps the SQLite URL in `prisma.config.ts`, while runtime access uses the Better SQLite3 driver adapter in `src/db/prisma.ts`. Enums are represented as strings for easy future enum evolution.
 
 ## Config
 

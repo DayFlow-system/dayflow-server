@@ -1,24 +1,57 @@
 # Dayflow Server
 
-Backend for a personal task/event/schedule manager that calculates a practical **Today** dashboard.
+Dayflow Server is the backend for a personal task, event, schedule, and daily-state manager. It is designed as a lightweight replacement for a Notion-style planning system: the API stores tasks, calendar events, recurring schedule blocks, and the current day state, then computes a practical **Today** dashboard with the items that are most relevant right now.
 
-## Install
+## Project overview
+
+- **Purpose:** help decide what to do today by combining deadlines, planned tasks, mandatory events, recurring schedule blocks, health, and energy.
+- **Core entities:** tasks, events, schedule blocks, day state, and the computed Today dashboard.
+- **Today logic:** excludes completed/skipped/archived tasks, separates deadline and planned tasks, avoids duplicates, applies health and energy filters, sorts by priority/deadline/energy compatibility, and limits suggested tasks.
+- **Architecture:** modular Fastify API with routes, Zod schemas, services, repositories, mappers, reusable utilities, and centralized error handling.
+- **Storage:** local SQLite through Prisma ORM, configured for Prisma 7 with `prisma.config.ts` and a Better SQLite3 adapter.
+- **Future clients:** prepared for Web/PWA, Telegram bot, Cloudflare Tunnel, and desktop app integrations.
+
+## Quick start
+
+One command prepares local development on Windows, macOS, and Linux:
+
+```bash
+npm run setup
+```
+
+It creates `.env` if it does not exist, installs dependencies, generates Prisma Client, and creates/applies the initial SQLite migration.
+
+You can also run the same setup through either alias:
+
+```bash
+npm run setup:local
+npm run init
+```
+
+If npm prints `Missing script: "setup"`, your local `package.json` is older than this code. Run `git pull` / update the branch, then check that `npm run` lists `setup`. If you cannot update immediately, use the manual install commands below.
+
+## Manual install
 
 ```bash
 npm install
+# PowerShell / Windows
+Copy-Item .env.example .env
+# macOS / Linux
 cp .env.example .env
-npx prisma generate
-npm run prisma:migrate
+npm run prisma:generate
+npm run prisma:migrate -- --name init
 ```
 
 ## Environment
 
 ```env
-DATABASE_URL="file:./dev.db"
+DATABASE_URL="file:./prisma/dev.db"
 PORT=3000
 HOST=0.0.0.0
 NODE_ENV=development
 ```
+
+`DATABASE_URL` points to a local SQLite file. You normally do not need to edit it for local development.
 
 ## Run
 
