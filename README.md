@@ -61,6 +61,26 @@ npm run dev
 npm run build && npm run start
 ```
 
+## Cleaning generated files
+
+Use these commands when compiled output or local generated artifacts look stale:
+
+```bash
+npm run clean
+# same as:
+npm run clean:build
+```
+
+`npm run clean` / `npm run clean:build` removes only compiled/cache artifacts: `dist`, `coverage`, `.cache`, `.turbo`, and `tsconfig.tsbuildinfo`. It keeps `node_modules`, `.env`, and local SQLite databases.
+
+For a full local reset from source:
+
+```bash
+npm run clean:full
+```
+
+`npm run clean:full` removes reproducible local files: build/cache output, `node_modules`, `.env`, and local SQLite database files. After it, run `npm run setup` again. Back up local `.env` or database files first if you need them.
+
 ## Tests and checks
 
 ```bash

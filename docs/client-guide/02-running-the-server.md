@@ -76,12 +76,16 @@ In a future deployment through Cloudflare Tunnel, this base URL becomes the tunn
 
 ## Resetting local backend state
 
-If compiled files are weird:
+If compiled files or caches look wrong, use the safe clean command:
 
 ```powershell
 npm run clean
+# same as:
+npm run clean:build
 npm run build
 ```
+
+`npm run clean` / `npm run clean:build` removes only compiled/cache artifacts: `dist`, `coverage`, `.cache`, `.turbo`, and `tsconfig.tsbuildinfo`. It keeps `node_modules`, `.env`, and local SQLite database files.
 
 If you want a true from-scratch local setup:
 
@@ -90,4 +94,4 @@ npm run clean:full
 npm run setup
 ```
 
-Warning: `clean:full` deletes `.env`, `node_modules`, and local SQLite database files.
+`npm run clean:full` removes reproducible local files: build/cache output, `node_modules`, `.env`, and local SQLite database files. Back up anything important first.

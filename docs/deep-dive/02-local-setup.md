@@ -131,6 +131,28 @@ npm run prisma:studio
 
 This gives a browser UI for inspecting local data.
 
+## Resetting local backend state
+
+If compiled files or caches look wrong, use the safe clean command:
+
+```powershell
+npm run clean
+# same as:
+npm run clean:build
+npm run build
+```
+
+`npm run clean` / `npm run clean:build` removes only compiled/cache artifacts: `dist`, `coverage`, `.cache`, `.turbo`, and `tsconfig.tsbuildinfo`. It keeps `node_modules`, `.env`, and local SQLite database files.
+
+If you want a true from-scratch local setup:
+
+```powershell
+npm run clean:full
+npm run setup
+```
+
+`npm run clean:full` removes reproducible local files: build/cache output, `node_modules`, `.env`, and local SQLite database files. Back up anything important first.
+
 ## Common problems
 
 ### `Missing script: "setup"`
