@@ -2,38 +2,23 @@
 
 Backend for a personal task/event/schedule manager that calculates a practical **Today** dashboard.
 
-## Quick start
-
-One command prepares local development on Windows, macOS, and Linux:
-
-```bash
-npm run setup
-```
-
-It creates `.env` if it does not exist, installs dependencies, generates Prisma Client, and creates/applies the initial SQLite migration.
-
-## Manual install
+## Install
 
 ```bash
 npm install
-# PowerShell / Windows
-Copy-Item .env.example .env
-# macOS / Linux
 cp .env.example .env
-npm run prisma:generate
-npm run prisma:migrate -- --name init
+npx prisma generate
+npm run prisma:migrate
 ```
 
 ## Environment
 
 ```env
-DATABASE_URL="file:./prisma/dev.db"
+DATABASE_URL="file:./dev.db"
 PORT=3000
 HOST=0.0.0.0
 NODE_ENV=development
 ```
-
-`DATABASE_URL` points to a local SQLite file. You normally do not need to edit it for local development.
 
 ## Run
 

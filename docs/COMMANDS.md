@@ -1,12 +1,5 @@
 # Commands
 
-## `npm run setup`
-
-- What: creates `.env` from `.env.example` when needed, installs dependencies, generates Prisma Client, and runs the initial migration.
-- When: first local setup or when you want to repair a missing local database/client.
-- Example: `npm run setup`.
-- Errors: npm registry access or Prisma validation errors. Solution: check internet access, then verify `.env`, `prisma.config.ts`, and `prisma/schema.prisma`.
-
 ## `npm install`
 
 - What: installs runtime and development dependencies.
@@ -40,20 +33,13 @@
 - What: runs Vitest once or in watch mode.
 - When: before commits or during development.
 - Example: `npm run test -- tests/api/tasks.api.test.ts`.
-- Errors: stale Prisma client/database. Solution: run `npm run setup`, or run `npm run prisma:generate` and `npm run prisma:migrate -- --name init` manually.
-
-## `npm run prisma:generate`
-
-- What: generates Prisma Client from `prisma/schema.prisma` using `prisma.config.ts`.
-- When: after installing dependencies or changing the Prisma schema.
-- Example: `npm run prisma:generate`.
-- Errors: datasource configuration errors. Solution: ensure `.env` has `DATABASE_URL` and `prisma.config.ts` points at `prisma/schema.prisma`.
+- Errors: stale Prisma client/database. Solution: run `npx prisma generate` and `npm run prisma:migrate`.
 
 ## `npm run prisma:migrate`
 
 - What: applies Prisma migrations in development.
 - When: after schema changes.
-- Example: `npm run prisma:migrate -- --name add_field` for schema changes, or `npm run prisma:migrate -- --name init` for the first migration.
+- Example: `npm run prisma:migrate -- --name add_field`.
 - Errors: migration conflict. Solution: inspect `prisma/migrations` and reset only disposable dev databases.
 
 ## `npm run prisma:studio`
@@ -61,7 +47,7 @@
 - What: opens Prisma Studio.
 - When: manual database inspection.
 - Example: `npm run prisma:studio`.
-- Errors: database URL missing. Solution: check `.env` and `prisma.config.ts`.
+- Errors: database URL missing. Solution: check `.env`.
 
 ## `npm run lint`
 
