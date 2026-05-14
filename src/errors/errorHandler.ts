@@ -23,6 +23,16 @@ export function registerErrorHandler(app: FastifyInstance): void {
         });
       }
 
+      if (isFastifyValidationError(error)) {
+        return reply.status(400).send({
+          error: {
+            code: ERROR_CODES.VALIDATION_ERROR,
+            message: 'Request validation failed',
+            details: error.validation ?? [],
+          },
+        });
+      }
+
       if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
         return reply.status(409).send({
           error: {
@@ -48,4 +58,8 @@ export function registerErrorHandler(app: FastifyInstance): void {
 
 function requestLogError(request: FastifyRequest, error: Error): void {
   request.log.error({ err: error }, 'Unhandled application error');
+}
+
+function isFastifyValidationError(error: FastifyError | Error): error is FastifyError {
+  return 'validation' in error && Array.isArray((error as FastifyError).validation);
 }

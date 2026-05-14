@@ -2,7 +2,7 @@
 
 ## Implemented
 
-- Fastify server with health, tasks, events, schedule, day-state, and Today dashboard routes.
+- Fastify server with health, tasks, events, schedule, day-state, Today dashboard routes, and Swagger UI for manual API testing.
 - SQLite persistence through Prisma ORM 7, `prisma.config.ts`, and the Better SQLite3 driver adapter.
 - Zod validation for UUIDs, enums, dates, ranges, and `HH:mm` time ranges.
 - Central API error handling.
@@ -11,7 +11,7 @@
 
 ## Created files
 
-- `src/` application, modules, utils, errors, types, and database client.
+- `src/` application, Swagger docs setup, modules, utils, errors, types, and database client.
 - `prisma/schema.prisma` SQLite schema.
 - `tests/` unit, service, repository, API, error, and regression folders.
 - `docs/` command, testing, errors, architecture, API, and change guide documentation.

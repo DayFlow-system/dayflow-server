@@ -17,10 +17,9 @@ export const dateOnlySchema = z.string().transform((value, ctx) => {
 export const optionalDateOnlySchema = dateOnlySchema.optional().nullable();
 export const timeSchema = z.string().regex(HH_MM_PATTERN, 'Time must use HH:mm format');
 
-export function validateTimeRange<T extends { startTime?: string | null; endTime?: string | null }>(
-  value: T,
-  ctx: z.RefinementCtx,
-): void {
+export function validateTimeRange<
+  T extends { startTime?: string | null | undefined; endTime?: string | null | undefined },
+>(value: T, ctx: z.RefinementCtx): void {
   if (value.startTime && value.endTime && !isEndAfterStart(value.startTime, value.endTime)) {
     ctx.addIssue({ code: 'custom', path: ['endTime'], message: 'endTime must be after startTime' });
   }

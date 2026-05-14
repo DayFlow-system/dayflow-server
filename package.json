@@ -15,6 +15,7 @@
     "test:watch": "vitest",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
+    "prisma:migrate:init": "prisma migrate dev --name init",
     "prisma:studio": "prisma studio",
     "lint": "eslint .",
     "format": "prettier --check .",
@@ -29,6 +30,8 @@
   "license": "MIT",
   "dependencies": {
     "@fastify/cors": "latest",
+    "@fastify/swagger": "latest",
+    "@fastify/swagger-ui": "latest",
     "@prisma/adapter-better-sqlite3": "latest",
     "@prisma/client": "latest",
     "dotenv": "latest",

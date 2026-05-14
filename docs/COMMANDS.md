@@ -18,7 +18,7 @@
 
 ## `npm run dev`
 
-- What: starts Fastify with `tsx watch`.
+- What: starts Fastify with `tsx watch`; Swagger UI is then available at `http://localhost:3000/docs`.
 - When: local development.
 - Example: `npm run dev`.
 - Errors: port already in use. Solution: change `PORT` in `.env`.
@@ -42,7 +42,7 @@
 - What: runs Vitest once or in watch mode.
 - When: before commits or during development.
 - Example: `npm run test -- tests/api/tasks.api.test.ts`.
-- Errors: stale Prisma client/database. Solution: run `npm run setup`, or run `npm run prisma:generate` and `npm run prisma:migrate -- --name init` manually.
+- Errors: stale Prisma client/database. Solution: run `npm run setup`, or run `npm run prisma:generate` and `npm run prisma:migrate:init` manually.
 
 ## `npm run prisma:generate`
 
@@ -55,7 +55,7 @@
 
 - What: applies Prisma migrations in development.
 - When: after schema changes.
-- Example: `npm run prisma:migrate -- --name add_field` for schema changes, or `npm run prisma:migrate -- --name init` for the first migration.
+- Example: `npm run prisma:migrate -- --name add_field` for schema changes, or `npm run prisma:migrate:init` for the first migration.
 - Errors: migration conflict. Solution: inspect `prisma/migrations` and reset only disposable dev databases.
 
 ## `npm run prisma:studio`

@@ -2,6 +2,10 @@
 
 Base URL: `http://localhost:3000`.
 
+Interactive Swagger UI: `http://localhost:3000/docs`.
+
+OpenAPI JSON: `http://localhost:3000/openapi.json`.
+
 ## Health
 
 `GET /health` → `{ "status": "ok" }`

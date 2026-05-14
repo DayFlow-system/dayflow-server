@@ -14,7 +14,8 @@ function run(command, args) {
   const result = spawnSync(command, args, {
     cwd: rootDir,
     stdio: 'inherit',
-    shell: false,
+    // Windows handles npm.cmd more reliably through the shell in non-interactive setup.
+    shell: process.platform === 'win32',
   });
 
   if (result.status !== 0) {
@@ -42,7 +43,7 @@ ensureEnvFile();
 
 run(npmCommand, ['install']);
 run(npmCommand, ['run', 'prisma:generate']);
-run(npmCommand, ['run', 'prisma:migrate', '--', '--name', 'init']);
+run(npmCommand, ['run', 'prisma:migrate:init']);
 
 console.log('\n✅ Setup complete. Start the API with: npm run dev');
 console.log('✅ Health check: http://localhost:3000/health');

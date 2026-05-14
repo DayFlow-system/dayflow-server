@@ -2,12 +2,13 @@
 
 ## Layers
 
-- Routes parse HTTP input and return HTTP responses.
+- Routes parse HTTP input, attach OpenAPI metadata, and return HTTP responses.
 - Schemas define Zod validation and inferred TypeScript input types.
 - Services own business logic and domain decisions.
 - Repositories own Prisma database operations.
 - Mappers convert database dates to API-friendly strings.
 - Utils hold reusable date, time, sorting, and validation helpers.
+- Swagger docs expose interactive manual testing at `/docs` and raw OpenAPI JSON at `/openapi.json`.
 - Errors centralize API error formatting.
 
 ## Prisma schema

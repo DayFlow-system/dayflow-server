@@ -39,7 +39,7 @@ Copy-Item .env.example .env
 # macOS / Linux
 cp .env.example .env
 npm run prisma:generate
-npm run prisma:migrate -- --name init
+npm run prisma:migrate:init
 ```
 
 ## Environment
@@ -74,6 +74,20 @@ npm run format
 
 ```bash
 cloudflared tunnel --url http://localhost:3000
+```
+
+## Swagger / manual API testing
+
+After `npm run dev`, open Swagger UI in your browser:
+
+```text
+http://localhost:3000/docs
+```
+
+Raw OpenAPI JSON is available at:
+
+```text
+http://localhost:3000/openapi.json
 ```
 
 ## API overview
