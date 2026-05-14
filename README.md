@@ -99,4 +99,4 @@ http://localhost:3000/openapi.json
 - `GET|PUT /day-state/today`
 - `GET /today`
 
-See [`docs/API.md`](docs/API.md) for request and response examples.
+See [`docs/API.md`](docs/API.md) for request formats, allowed values, rules, PowerShell examples, and response examples.
