@@ -1,0 +1,56 @@
+{
+  "name": "dayflow-server",
+  "version": "0.1.0",
+  "description": "Modular task, event, schedule, and Today dashboard backend.",
+  "type": "module",
+  "main": "dist/server.js",
+  "scripts": {
+    "setup": "node scripts/setup-local.mjs",
+    "setup:local": "node scripts/setup-local.mjs",
+    "init": "node scripts/setup-local.mjs",
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/server.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:migrate:init": "prisma migrate dev --name init",
+    "prisma:studio": "prisma studio",
+    "lint": "eslint .",
+    "format": "prettier --check .",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "tasks",
+    "schedule",
+    "fastify",
+    "prisma"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@fastify/cors": "latest",
+    "@fastify/swagger": "latest",
+    "@fastify/swagger-ui": "latest",
+    "@prisma/adapter-better-sqlite3": "latest",
+    "@prisma/client": "latest",
+    "dotenv": "latest",
+    "fastify": "latest",
+    "zod": "latest"
+  },
+  "devDependencies": {
+    "@eslint/js": "latest",
+    "@types/node": "latest",
+    "eslint": "latest",
+    "eslint-config-prettier": "latest",
+    "prettier": "latest",
+    "prisma": "latest",
+    "tsx": "latest",
+    "typescript": "latest",
+    "typescript-eslint": "latest",
+    "vitest": "latest"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
