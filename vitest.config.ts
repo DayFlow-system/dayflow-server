@@ -5,10 +5,6 @@ export default defineConfig({
     environment: 'node',
     setupFiles: ['tests/setup.ts'],
     fileParallelism: false,
-    poolOptions: {
-      threads: {
-        singleThread: true,
-      },
-    },
+    maxWorkers: 1,
   },
 });

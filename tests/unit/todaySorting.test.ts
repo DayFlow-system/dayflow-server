@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import type { TodayTask } from '../../src/modules/today/today.types.js';
 import {
   limitSuggestedTasks,
   sortTasksByPriorityDeadlineEnergy,
@@ -7,8 +8,8 @@ const makeTask = (
   id: string,
   priority: number,
   deadline: Date | null = null,
-  energyRequired = 'low',
-) => ({
+  energyRequired: TodayTask['energyRequired'] = 'low',
+): TodayTask => ({
   id,
   title: id,
   description: null,

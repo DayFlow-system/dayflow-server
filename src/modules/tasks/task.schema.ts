@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { ENERGY_LEVELS, HEALTH_RULES, TASK_STATUSES, TASK_TYPES } from '../../types/common.js';
-import { dateOnlySchema, optionalDateOnlySchema } from '../../utils/validation.js';
+import { optionalDateOnlySchema } from '../../utils/validation.js';
 
 export const taskCreateSchema = z.object({
   title: z.string().trim().min(1),
