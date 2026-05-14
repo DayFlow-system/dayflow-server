@@ -33,14 +33,7 @@
 - What: runs Vitest once or in watch mode.
 - When: before commits or during development.
 - Example: `npm run test -- tests/api/tasks.api.test.ts`.
-- Errors: stale Prisma client/database. Solution: run `npm run prisma:generate` and `npm run prisma:migrate`.
-
-## `npm run prisma:generate`
-
-- What: generates Prisma Client from `prisma/schema.prisma` using `prisma.config.ts`.
-- When: after installing dependencies or changing the Prisma schema.
-- Example: `npm run prisma:generate`.
-- Errors: datasource configuration errors. Solution: ensure `.env` has `DATABASE_URL` and `prisma.config.ts` points at `prisma/schema.prisma`.
+- Errors: stale Prisma client/database. Solution: run `npx prisma generate` and `npm run prisma:migrate`.
 
 ## `npm run prisma:migrate`
 
@@ -54,7 +47,7 @@
 - What: opens Prisma Studio.
 - When: manual database inspection.
 - Example: `npm run prisma:studio`.
-- Errors: database URL missing. Solution: check `.env` and `prisma.config.ts`.
+- Errors: database URL missing. Solution: check `.env`.
 
 ## `npm run lint`
 

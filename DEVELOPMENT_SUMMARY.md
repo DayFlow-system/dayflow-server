@@ -3,7 +3,7 @@
 ## Implemented
 
 - Fastify server with health, tasks, events, schedule, day-state, and Today dashboard routes.
-- SQLite persistence through Prisma ORM 7, `prisma.config.ts`, and the Better SQLite3 driver adapter.
+- SQLite persistence through Prisma ORM.
 - Zod validation for UUIDs, enums, dates, ranges, and `HH:mm` time ranges.
 - Central API error handling.
 - Modular Today logic with filtering, duplicate removal, sorting, and limits.
@@ -22,7 +22,7 @@ Tests cover health check, CRUD/soft-delete flows, validation errors, service beh
 
 ## Commands
 
-Available commands: `dev`, `build`, `start`, `test`, `test:watch`, `prisma:generate`, `prisma:migrate`, `prisma:studio`, `lint`, `format`, and `typecheck`.
+Available commands: `dev`, `build`, `start`, `test`, `test:watch`, `prisma:migrate`, `prisma:studio`, `lint`, `format`, and `typecheck`.
 
 ## Next extensions
 

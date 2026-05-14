@@ -7,14 +7,14 @@ Backend for a personal task/event/schedule manager that calculates a practical *
 ```bash
 npm install
 cp .env.example .env
-npm run prisma:generate
+npx prisma generate
 npm run prisma:migrate
 ```
 
 ## Environment
 
 ```env
-DATABASE_URL="file:./prisma/dev.db"
+DATABASE_URL="file:./dev.db"
 PORT=3000
 HOST=0.0.0.0
 NODE_ENV=development
