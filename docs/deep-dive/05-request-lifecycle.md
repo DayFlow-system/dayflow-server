@@ -1,36 +1,46 @@
-# 05. Жизненный цикл запроса
+# 05. Request Lifecycle
 
-Разберём пример `POST /tasks`.
+This file traces one request through the backend. Example: `POST /tasks`.
 
-## 1. Клиент отправляет HTTP
+## 1. Client sends HTTP
 
 ```powershell
 $body = @{ title = "Read"; priority = 4 } | ConvertTo-Json
 Invoke-RestMethod -Method POST -Uri http://localhost:3000/tasks -ContentType "application/json" -Body $body
 ```
 
-## 2. Fastify находит route
+The request includes:
 
-Route определён в `task.routes.ts`:
+- method: `POST`;
+- path: `/tasks`;
+- header: `Content-Type: application/json`;
+- JSON body.
+
+## 2. Fastify matches the route
+
+`task.routes.ts` registers:
 
 ```text
-POST /tasks → taskCreateSchema.parse(body) → TaskService.create(...)
+POST /tasks
 ```
 
-## 3. Zod валидирует body
+The handler parses the request body with `taskCreateSchema` and then calls `TaskService.create`.
 
-Zod проверяет:
+## 3. Zod validates input
 
-- есть ли `title`;
-- входит ли `priority` в 1..5;
-- правильные ли enum values;
-- правильные ли даты.
+Zod checks:
 
-Если body неправильный, выбрасывается `ZodError`.
+- `title` exists and is not empty;
+- `priority` is between 1 and 5;
+- enum values are allowed;
+- dates are valid `YYYY-MM-DD` strings;
+- optional fields are either valid values or `null`.
 
-## 4. Error handler форматирует ошибки
+If validation fails, Zod throws `ZodError`.
 
-Вместо случайного stack trace клиент получает стабильный JSON:
+## 4. Error handler normalizes failures
+
+Instead of returning a random stack trace, the API returns:
 
 ```json
 {
@@ -42,37 +52,44 @@ Zod проверяет:
 }
 ```
 
-## 5. Service выполняет бизнес-логику
+The same error shape is used for not found, conflict, bad request, and internal errors.
 
-`TaskService.create` не знает про HTTP. Он получает уже валидные данные и вызывает repository.
+## 5. Service handles business logic
 
-## 6. Repository пишет в SQLite через Prisma
+`TaskService.create` receives already validated data. It does not know about HTTP. Its job is to perform business behavior and delegate persistence.
 
-`TaskRepository.create` вызывает Prisma:
+For update/delete flows, services also translate Prisma missing-record errors into `NOT_FOUND` API errors.
+
+## 6. Repository talks to Prisma
+
+`TaskRepository.create` calls Prisma:
 
 ```text
 prisma.task.create(...)
 ```
 
-Перед записью repository удаляет `undefined` поля. Это важно для строгого TypeScript и Prisma: поле либо отсутствует, либо имеет реальное значение/null.
+Before writing, it removes `undefined` fields. This matters because optional properties and explicit `undefined` are different when TypeScript uses `exactOptionalPropertyTypes`.
 
-## 7. Mapper готовит ответ
+## 7. Prisma writes to SQLite
 
-Mapper превращает Prisma model в API JSON:
+Prisma converts the TypeScript call into SQL for SQLite. SQLite stores the row in `prisma/dev.db` by default.
 
-- Date objects → strings;
-- nullable dates → `null` или `YYYY-MM-DD`.
+## 8. Mapper shapes the response
 
-## 8. Клиент получает JSON
+The mapper converts Prisma output into API JSON:
 
-Клиент видит созданную задачу с `id`, timestamps и дефолтными значениями.
+- Date objects become strings;
+- date-only fields become `YYYY-MM-DD`;
+- optional missing dates become `null`.
 
-## Где тестировать вручную
+## 9. Client receives JSON
 
-Swagger UI:
+The client receives the created task with generated `id`, `createdAt`, and `updatedAt`.
 
-```text
-http://localhost:3000/docs
-```
+## How Swagger fits in
 
-Там можно выбрать endpoint, нажать **Try it out**, вставить JSON и увидеть response.
+Swagger UI is just another client. When you click **Try it out**, Swagger sends HTTP requests to the same Fastify routes.
+
+## How tests fit in
+
+API tests use Fastify `inject`, which sends requests directly into the app without opening a network port. This tests routes, services, repositories, validation, error handling, and mappers together.

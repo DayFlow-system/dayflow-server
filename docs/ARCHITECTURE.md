@@ -29,4 +29,4 @@ The `tests` tree mirrors app layers: unit, service, repository, API, errors, and
 
 ## Deep dive
 
-For a beginner-friendly, end-to-end explanation of how to rebuild the same backend, see [`docs/deep-dive/README.md`](deep-dive/README.md).
+For a beginner-friendly English, end-to-end explanation of how to rebuild and extend the same backend, see [`docs/deep-dive/README.md`](deep-dive/README.md).

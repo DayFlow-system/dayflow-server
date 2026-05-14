@@ -1,20 +1,34 @@
 # Dayflow Deep Dive
 
-Эта папка объясняет проект максимально подробно: что он делает, из каких частей состоит, как запрос проходит через сервер, как устроена база, как считается Today dashboard и как повторить такую архитектуру с нуля.
+This folder explains Dayflow Server in detail: what the product is, how the backend is structured, how a request moves through the system, how the database is modeled, how the Today dashboard is computed, and how to rebuild the same product from scratch.
 
-Читать лучше по порядку:
+Read the files in order:
 
-1. [`01-product.md`](01-product.md) — что за продукт мы строим и какие задачи он решает.
-2. [`02-local-setup.md`](02-local-setup.md) — как поднять проект локально и что делает каждая команда.
-3. [`03-architecture.md`](03-architecture.md) — общая архитектура и зачем нужны routes/services/repositories/mappers.
-4. [`04-data-model.md`](04-data-model.md) — таблицы, поля, enum-значения и связи с бизнес-логикой.
-5. [`05-request-lifecycle.md`](05-request-lifecycle.md) — полный путь HTTP-запроса от клиента до SQLite и обратно.
-6. [`06-today-algorithm.md`](06-today-algorithm.md) — подробное объяснение алгоритма `/today`.
-7. [`07-testing-strategy.md`](07-testing-strategy.md) — какие тесты есть, зачем каждый уровень и как добавлять новые.
-8. [`08-build-it-again.md`](08-build-it-again.md) — пошаговый план, как написать такой же backend с нуля.
+1. [`01-product.md`](01-product.md) — the product idea, user problem, core workflows, and design constraints.
+2. [`02-local-setup.md`](02-local-setup.md) — local setup, environment variables, Prisma commands, and common troubleshooting.
+3. [`03-architecture.md`](03-architecture.md) — layered architecture, module boundaries, and why routes/services/repositories/mappers are separated.
+4. [`04-data-model.md`](04-data-model.md) — tables, fields, allowed values, persistence decisions, and how data connects to business rules.
+5. [`05-request-lifecycle.md`](05-request-lifecycle.md) — the full path from HTTP request to SQLite and back to JSON.
+6. [`06-today-algorithm.md`](06-today-algorithm.md) — the complete `/today` algorithm and how every dashboard section is built.
+7. [`07-testing-strategy.md`](07-testing-strategy.md) — test layers, what each layer protects, and how to add new tests.
+8. [`08-build-it-again.md`](08-build-it-again.md) — a step-by-step blueprint for building the same backend again.
 
-Если хочется просто вручную потыкать API, запусти сервер и открой Swagger:
+For manual API testing, start the server and open Swagger UI:
 
 ```text
 http://localhost:3000/docs
 ```
+
+## What you should understand after reading this folder
+
+After reading the deep dive, a developer should be able to:
+
+- explain what Dayflow stores and why;
+- run the project locally;
+- send API requests through Swagger or PowerShell;
+- trace a request from route to service to repository to database;
+- change a model field safely;
+- add a new endpoint;
+- modify Today dashboard rules;
+- write tests for a bug fix;
+- rebuild a similar Fastify + Prisma + Zod backend from scratch.

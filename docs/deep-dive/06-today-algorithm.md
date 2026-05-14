@@ -1,41 +1,43 @@
-# 06. Алгоритм Today dashboard
+# 06. Today Dashboard Algorithm
 
-`GET /today` — главная бизнес-функция проекта.
+`GET /today` is the main product endpoint. It combines stored data and current day context into one dashboard.
 
-## Входные данные
+## Input data
 
-Алгоритм берёт:
+The algorithm loads:
 
-- сегодняшнюю дату;
-- текущий день недели;
-- day state на сегодня;
-- events на сегодня;
-- active schedule blocks на текущий weekday;
-- все tasks.
+- today's date;
+- current weekday;
+- today's DayState;
+- events on today's date;
+- active schedule blocks for the weekday;
+- all tasks.
 
-Если DayState на сегодня отсутствует, он создаётся автоматически.
+If today's DayState does not exist, it is created automatically.
 
-## Секции результата
+## Output sections
 
 ### `mandatoryEvents`
 
-События на сегодня, где:
+Events where:
 
 ```text
-importance = mandatory
+date = today
+AND importance = mandatory
 ```
 
 ### `plannedEvents`
 
-События на сегодня, где:
+Events where:
 
 ```text
-status = planned
+date = today
+AND status = planned
 ```
 
 ### `scheduleBlocks`
 
-Блоки расписания, где:
+Schedule blocks where:
 
 ```text
 status = active
@@ -44,13 +46,13 @@ AND dayOfWeek = current weekday
 
 ### `deadlineTasks`
 
-Активные задачи, где:
+Active tasks where:
 
 ```text
 deadline <= today
 ```
 
-Активные значит status не входит в:
+Active means status is not:
 
 ```text
 done, skipped, archived
@@ -58,7 +60,7 @@ done, skipped, archived
 
 ### `plannedTasks`
 
-Активные задачи, где:
+Active tasks where:
 
 ```text
 plannedDate = today
@@ -66,67 +68,85 @@ plannedDate = today
 
 ### `suggestedTasks`
 
-Кандидаты в suggestions проходят несколько этапов.
+Suggested tasks are active tasks that are not already shown in `deadlineTasks` or `plannedTasks`, then filtered by health and energy, sorted, and limited.
 
-## Этап 1. Убрать неактивные задачи
+## Step 1. Filter active tasks
 
-Исключаются:
+Remove tasks with these statuses:
 
 ```text
 done, skipped, archived
 ```
 
-## Этап 2. Убрать дубликаты
+## Step 2. Build deadline and planned task lists
 
-Если задача уже есть в `deadlineTasks` или `plannedTasks`, она не должна повторяться в `suggestedTasks`.
+Deadline tasks are selected before suggestions. Planned tasks are selected before suggestions too.
 
-## Этап 3. Health filtering
+This matters because a task should not appear in multiple dashboard sections.
 
-Если `health = sick`, исключаются:
+## Step 3. Remove duplicates from suggestions
+
+Any task already shown in `deadlineTasks` or `plannedTasks` is removed from `suggestedTasks` candidates.
+
+## Step 4. Health filtering
+
+If `health = sick`, remove tasks with:
 
 ```text
 skip_if_sick, only_if_healthy
 ```
 
-Если `health = slightly_sick`, исключаются:
+If `health = slightly_sick`, remove tasks with:
 
 ```text
 only_if_healthy
 ```
 
-Если `health = healthy`, задачи не фильтруются по healthRule.
+If `health = healthy`, do not remove tasks by health rule.
 
-## Этап 4. Energy filtering
+## Step 5. Energy filtering
 
-Если `energy = low`, suggested tasks включают только:
+If `energy = low`, keep only:
 
 ```text
 energyRequired = low
 ```
 
-Если `energy = medium`, suggested tasks включают:
+If `energy = medium`, keep:
 
 ```text
 low, medium
 ```
 
-Если `energy = high`, подходят все уровни.
+If `energy = high`, keep all energy levels.
 
-## Этап 5. Sorting
+## Step 6. Sorting
 
-Сортировка:
+Sort by:
 
 1. `priority DESC`;
-2. ближайший `deadline` выше;
-3. лучшая совместимость энергии выше.
+2. nearest deadline first;
+3. energy compatibility.
 
-## Этап 6. Limit
+Priority is first because an important task should not be hidden just because another task has a slightly better energy fit.
 
-В `suggestedTasks` возвращается максимум 10 задач.
+## Step 7. Limit
 
-## Почему алгоритм разбит на функции
+Return at most 10 `suggestedTasks`.
 
-Правила Today будут часто меняться. Поэтому код разделён на маленькие функции:
+## Example
+
+Assume today is `2026-05-14`, health is `slightly_sick`, and energy is `medium`.
+
+- A high-priority overdue task goes to `deadlineTasks`.
+- A task planned for today goes to `plannedTasks`.
+- A task with `healthRule = only_if_healthy` is excluded from suggestions.
+- A high-energy task is excluded from suggestions because energy is only medium.
+- The remaining suggested tasks are sorted and capped at 10.
+
+## Why the code is split into small functions
+
+Today rules are likely to change. The code is intentionally split into functions like:
 
 - `filterActiveTasks`;
 - `filterTasksByHealth`;
@@ -138,4 +158,4 @@ low, medium
 - `limitSuggestedTasks`;
 - `buildTodayDashboard`.
 
-Так проще тестировать и безопаснее менять поведение.
+This makes each rule easy to test and easy to replace.

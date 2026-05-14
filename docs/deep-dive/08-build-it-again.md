@@ -1,26 +1,51 @@
-# 08. Как написать такой же backend с нуля
+# 08. Build the Same Backend From Scratch
 
-Этот файл — рецепт, по которому можно повторить продукт.
+This file is a blueprint for rebuilding Dayflow Server. Follow it in order if you want to create a similar product.
 
-## Шаг 1. Создать Node/TypeScript проект
+## Step 1. Define the product rules
 
-Нужны:
+Before writing code, define the domain:
 
-- Node.js;
-- TypeScript;
+- What is a task?
+- What is an event?
+- What is a recurring schedule block?
+- What is day state?
+- What should Today dashboard contain?
+- Which items should be hidden, prioritized, or suggested?
+
+Write those rules down. They will become schemas, database fields, services, and tests.
+
+## Step 2. Create the Node/TypeScript project
+
+Add:
+
+- `package.json`;
+- `tsconfig.json`;
+- `tsconfig.build.json`;
+- Prettier config;
+- ESLint config;
+- Vitest config;
+- npm scripts.
+
+Core dependencies:
+
 - Fastify;
 - Zod;
 - Prisma;
-- SQLite;
+- SQLite adapter;
+- dotenv;
 - Vitest;
-- ESLint;
-- Prettier.
+- TypeScript.
 
-Сначала создаётся `package.json`, `tsconfig.json`, Prettier/ESLint config и npm scripts.
+## Step 3. Configure environment loading
 
-## Шаг 2. Настроить Prisma
+Create `src/config.ts`.
 
-Создать:
+Load `.env` with dotenv, then validate values with Zod. Do not let the server start with invalid environment variables.
+
+## Step 4. Configure Prisma
+
+Create:
 
 ```text
 prisma/schema.prisma
@@ -28,30 +53,43 @@ prisma.config.ts
 src/db/prisma.ts
 ```
 
-В schema описать модели:
+For Prisma 7:
+
+- keep datasource URL in `prisma.config.ts`;
+- use a driver adapter in `src/db/prisma.ts`;
+- run `npm run prisma:generate` after schema changes.
+
+## Step 5. Model the database
+
+Create models:
 
 - Task;
 - Event;
 - ScheduleBlock;
 - DayState.
 
-Для Prisma 7 datasource URL держать в `prisma.config.ts`, а runtime client создавать с SQLite adapter.
+Add indexes for fields used in filters:
 
-## Шаг 3. Создать Fastify app
+- status;
+- date;
+- deadline;
+- plannedDate;
+- dayOfWeek.
 
-Файлы:
+## Step 6. Build the Fastify shell
+
+Create:
 
 ```text
 src/app.ts
 src/server.ts
-src/config.ts
 ```
 
-`app.ts` собирает приложение, `server.ts` запускает listen, `config.ts` читает env.
+`app.ts` should register plugins and routes. `server.ts` should only start/stop the server.
 
-## Шаг 4. Сделать общий error format
+## Step 7. Add shared error handling
 
-Создать:
+Create:
 
 ```text
 src/errors/AppError.ts
@@ -59,11 +97,11 @@ src/errors/errorCodes.ts
 src/errors/errorHandler.ts
 ```
 
-Все ошибки должны возвращаться в одном формате.
+Decide on one response shape and use it everywhere.
 
-## Шаг 5. Сделать utils
+## Step 8. Add utilities
 
-Создать:
+Create reusable helpers before duplicating logic:
 
 ```text
 src/utils/date.ts
@@ -73,70 +111,81 @@ src/utils/sorting.ts
 src/utils/object.ts
 ```
 
-Не дублировать parsing/validation/sorting в modules.
+## Step 9. Build one CRUD module
 
-## Шаг 6. Сделать первый module по шаблону
-
-Например `tasks`:
+Use Tasks as the first module:
 
 ```text
 task.schema.ts      # Zod input validation
 task.routes.ts      # HTTP endpoints
-task.service.ts     # business logic
-task.repository.ts  # Prisma operations
-task.mapper.ts      # DB → API JSON
+task.service.ts     # business behavior
+task.repository.ts  # Prisma queries
+task.mapper.ts      # API response shape
 ```
 
-Потом повторить для events, schedule, day-state.
+Once Tasks works, repeat the pattern for Events, Schedule, and DayState.
 
-## Шаг 7. Сделать Today module
+## Step 10. Build Today logic
 
-Today module отличается: он больше про алгоритм, чем CRUD.
+Today is not CRUD. Treat it as an algorithm module.
 
-Сначала написать маленькие функции:
+Start with small pure functions:
 
-- active filter;
-- health filter;
-- energy filter;
-- deadline picker;
-- planned picker;
-- duplicate removal;
-- sorting;
+- filter active tasks;
+- filter by health;
+- filter by energy;
+- pick deadline tasks;
+- pick planned tasks;
+- remove duplicates;
+- sort;
 - limit.
 
-Потом собрать их в `buildTodayDashboard`.
+Then compose those functions in `buildTodayDashboard`.
 
-## Шаг 8. Подключить Swagger
+## Step 11. Add Swagger
 
-Создать:
+Create:
 
 ```text
 src/docs/swagger.ts
 src/docs/routeSchemas.ts
 ```
 
-Swagger UI нужен, чтобы вручную тестировать API без отдельного frontend.
+Register Swagger UI at `/docs` and OpenAPI JSON at `/openapi.json`.
 
-## Шаг 9. Добавить тесты
+## Step 12. Add tests
 
-Минимальный набор:
+Add tests in layers:
 
-- unit tests на utils и Today functions;
-- service tests на business logic;
-- repository tests на Prisma;
-- API tests через Fastify inject;
-- error tests.
+- unit tests for pure functions;
+- service tests for business rules;
+- repository tests for Prisma queries;
+- API tests for Fastify routes;
+- error tests for validation and missing entities.
 
-## Шаг 10. Написать docs
+## Step 13. Add documentation
 
-Документация должна отвечать на вопросы:
+At minimum, write:
 
-- как запустить;
-- какие endpoints есть;
-- какие поля и enum values допустимы;
-- как работает архитектура;
-- как изменить проект;
-- как тестировать;
-- как устроен главный алгоритм Today.
+- README;
+- API docs;
+- command docs;
+- testing docs;
+- error docs;
+- architecture docs;
+- change guide;
+- deep-dive docs.
 
-Если после прочтения docs новый разработчик может повторить проект, документация хорошая.
+## Step 14. Verify everything
+
+Run:
+
+```powershell
+npm run format
+npm run lint
+npm run typecheck
+npm run build
+npm run test
+```
+
+If all pass, the backend is ready for the next feature.
