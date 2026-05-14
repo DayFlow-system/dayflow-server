@@ -23,6 +23,20 @@
 - Example: `npm run dev`.
 - Errors: port already in use. Solution: change `PORT` in `.env`.
 
+## `npm run clean` / `npm run clean:build`
+
+- What: removes compiled and cache-like files such as `dist`, `coverage`, `.cache`, `.turbo`, and `tsconfig.tsbuildinfo`.
+- When: use before rebuilding if compiled output looks stale or wrong.
+- Example: `npm run clean && npm run build`.
+- Preserves: `node_modules`, `.env`, and local SQLite databases.
+
+## `npm run clean:full`
+
+- What: removes everything reproducible locally: build output, caches, `node_modules`, `.env`, and local SQLite database files.
+- When: use when you want a truly fresh local setup from source.
+- Example: `npm run clean:full`, then `npm run setup`.
+- Warning: this deletes local database files and `.env`; commit or back up anything important first.
+
 ## `npm run build`
 
 - What: compiles TypeScript to `dist/`.

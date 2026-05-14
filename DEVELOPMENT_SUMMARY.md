@@ -14,7 +14,7 @@
 - `src/` application, Swagger docs setup, modules, utils, errors, types, and database client.
 - `prisma/schema.prisma` SQLite schema.
 - `tests/` unit, service, repository, API, error, and regression folders.
-- `docs/` command, testing, errors, architecture, API, change guide, and deep-dive documentation.
+- `docs/` command, testing, errors, architecture, API, change guide, and deep-dive documentation, and client implementation guide.
 
 ## Tests
 
