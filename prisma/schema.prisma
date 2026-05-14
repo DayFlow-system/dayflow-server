@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Task {
+  id             String   @id @default(uuid())
+  title          String
+  description    String?
+  status         String   @default("planned")
+  type           String   @default("task")
+  priority       Int      @default(3)
+  deadline       DateTime?
+  plannedDate    DateTime?
+  lastDoneAt     DateTime?
+  energyRequired String   @default("medium")
+  healthRule     String   @default("always")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([status])
+  @@index([deadline])
+  @@index([plannedDate])
+}
+
+model Event {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  date        DateTime
+  startTime   String?
+  endTime     String?
+  status      String   @default("planned")
+  importance  String   @default("medium")
+  location    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([date])
+  @@index([status])
+}
+
+model ScheduleBlock {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  dayOfWeek   Int
+  startTime   String
+  endTime     String?
+  type        String   @default("other")
+  status      String   @default("active")
+  importance  String   @default("medium")
+  location    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([dayOfWeek])
+  @@index([status])
+}
+
+model DayState {
+  id        String   @id @default(uuid())
+  date      DateTime @unique
+  health    String   @default("healthy")
+  energy    String   @default("medium")
+  mood      Int?
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
