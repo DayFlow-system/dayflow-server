@@ -1,4 +1,6 @@
 import type { Prisma, PrismaClient } from '@prisma/client';
+import type { RichTextDocument } from '../../types/richText.js';
+import { serializeRichTextDocument } from '../../utils/richText.js';
 import { withoutUndefined } from '../../utils/object.js';
 import type { DayStatePutInput } from './dayState.schema.js';
 
@@ -12,8 +14,8 @@ export class DayStateRepository {
   upsert(date: Date, data: DayStatePutInput) {
     return this.db.dayState.upsert({
       where: { date },
-      create: withoutUndefined({ date, ...data }) as Prisma.DayStateCreateInput,
-      update: withoutUndefined(data) as Prisma.DayStateUpdateInput,
+      create: { date, ...normalizeRichTextInput(data) } as Prisma.DayStateCreateInput,
+      update: normalizeRichTextInput(data) as Prisma.DayStateUpdateInput,
     });
   }
 
@@ -24,4 +26,13 @@ export class DayStateRepository {
   deleteAll() {
     return this.db.dayState.deleteMany();
   }
+}
+
+function normalizeRichTextInput<T extends { notesRichText?: unknown }>(data: T) {
+  return withoutUndefined({
+    ...data,
+    notesRichText: serializeRichTextDocument(
+      data.notesRichText as RichTextDocument | null | undefined,
+    ),
+  });
 }

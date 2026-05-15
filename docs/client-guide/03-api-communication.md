@@ -124,3 +124,21 @@ Mutation endpoints:
 - `PATCH /schedule/:id`;
 - `DELETE /schedule/:id`;
 - `PUT /day-state/today`.
+
+## Rich text fields
+
+Formatted descriptions and day notes are sent as JSON objects, not as pre-stringified JSON. Use `descriptionRichText` for tasks/events/schedule blocks and `notesRichText` for day state. Keep `description` and `notes` synchronized as plain-text fallbacks when practical.
+
+```ts
+const descriptionRichText = {
+  version: 1,
+  blocks: [
+    {
+      type: 'paragraph',
+      children: [{ type: 'text', text: 'Focus block', marks: { bold: true } }],
+    },
+  ],
+};
+```
+
+Use `null` to clear formatting. Omit the rich-text field in `PATCH` requests when the existing formatting should stay unchanged.

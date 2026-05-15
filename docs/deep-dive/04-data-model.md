@@ -87,7 +87,8 @@ Fields:
 - `health` — `healthy`, `slightly_sick`, or `sick`;
 - `energy` — `low`, `medium`, or `high`;
 - `mood` — optional score from 1 to 5;
-- `notes` — optional free text.
+- `notes` — optional plain-text fallback;
+- `notesRichText` — optional formatted notes saved as versioned rich-text JSON.
 
 If today's DayState does not exist, the API creates it automatically:
 
@@ -97,6 +98,12 @@ If today's DayState does not exist, the API creates it automatically:
   "energy": "medium"
 }
 ```
+
+## Formatted text storage
+
+Tasks, events, and schedule blocks have a plain `description` plus `descriptionRichText`. DayState has a plain `notes` plus `notesRichText`. The rich fields are validated as version-1 rich-text documents by Zod, serialized as JSON strings for SQLite/Prisma storage, and parsed back into JSON objects by API mappers.
+
+This split keeps simple clients working while preserving editor formatting such as bold, italic, underline, color, lists, and task links. See [`../RICH_TEXT.md`](../RICH_TEXT.md) for the exact schema.
 
 ## Why enum-like fields are strings
 

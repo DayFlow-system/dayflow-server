@@ -1,3 +1,4 @@
+import { parseRichTextDocument } from '../../utils/richText.js';
 import type { Task } from '@prisma/client';
 
 export function mapTask(task: Task) {
@@ -6,6 +7,7 @@ export function mapTask(task: Task) {
     deadline: task.deadline?.toISOString().slice(0, 10) ?? null,
     plannedDate: task.plannedDate?.toISOString().slice(0, 10) ?? null,
     lastDoneAt: task.lastDoneAt?.toISOString().slice(0, 10) ?? null,
+    descriptionRichText: parseRichTextDocument(task.descriptionRichText),
     createdAt: task.createdAt.toISOString(),
     updatedAt: task.updatedAt.toISOString(),
   };

@@ -189,3 +189,7 @@ npm run test
 ```
 
 If all pass, the backend is ready for the next feature.
+
+## Rebuild rich-text support
+
+When rebuilding the server, add `src/types/richText.ts` and `src/utils/richText.ts` before wiring modules. The type file defines the versioned document shape; the utility file owns Zod validation plus serialization/parsing between API objects and SQLite string columns. Then add `descriptionRichText` to tasks/events/schedule blocks and `notesRichText` to day state in the Prisma schema, request schemas, repositories, mappers, OpenAPI schemas, and tests.

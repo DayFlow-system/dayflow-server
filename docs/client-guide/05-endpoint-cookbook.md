@@ -37,6 +37,16 @@ const task = await apiRequest('/tasks', {
   method: 'POST',
   body: JSON.stringify({
     title: 'Read TypeScript chapter',
+    description: 'Read the generics section',
+    descriptionRichText: {
+      version: 1,
+      blocks: [
+        {
+          type: 'paragraph',
+          children: [{ type: 'text', text: 'Read the generics section', marks: { bold: true } }],
+        },
+      ],
+    },
     type: 'study',
     priority: 4,
     plannedDate: '2026-05-14',
@@ -158,6 +168,15 @@ const updatedDayState = await apiRequest('/day-state/today', {
     energy: 'low',
     mood: 3,
     notes: 'Keep work light today',
+    notesRichText: {
+      version: 1,
+      blocks: [
+        {
+          type: 'paragraph',
+          children: [{ type: 'text', text: 'Keep work light today', marks: { color: 'warning' } }],
+        },
+      ],
+    },
   }),
 });
 ```

@@ -6,10 +6,23 @@ describe('tasks api', () => {
     const created = await app.inject({
       method: 'POST',
       url: '/tasks',
-      payload: { title: 'Task', priority: 5 },
+      payload: {
+        title: 'Task',
+        priority: 5,
+        descriptionRichText: {
+          version: 1,
+          blocks: [
+            {
+              type: 'paragraph',
+              children: [{ type: 'text', text: 'Bold task note', marks: { bold: true } }],
+            },
+          ],
+        },
+      },
     });
     expect(created.statusCode).toBe(201);
     const task = created.json();
+    expect(task.descriptionRichText.blocks[0].children[0].marks.bold).toBe(true);
     expect((await app.inject(`/tasks/${task.id}`)).statusCode).toBe(200);
     expect(
       (

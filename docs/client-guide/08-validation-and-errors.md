@@ -7,6 +7,7 @@ The backend validates everything. The client should still validate forms to give
 ### Common
 
 - `title` cannot be empty.
+- Rich-text fields must be version-1 documents with supported blocks and marks; unknown properties are rejected.
 - Dates must be `YYYY-MM-DD`.
 - Times must be `HH:mm`.
 - If `startTime` and `endTime` are present, `endTime` must be later.

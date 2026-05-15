@@ -1,10 +1,12 @@
 import { z } from 'zod';
 import { EVENT_STATUSES, IMPORTANCE_LEVELS } from '../../types/common.js';
+import { optionalRichTextDocumentSchema } from '../../utils/richText.js';
 import { dateOnlySchema, timeSchema, validateTimeRange } from '../../utils/validation.js';
 
 const eventBaseSchema = z.object({
   title: z.string().trim().min(1),
   description: z.string().trim().optional().nullable(),
+  descriptionRichText: optionalRichTextDocumentSchema,
   date: dateOnlySchema,
   startTime: timeSchema.optional().nullable(),
   endTime: timeSchema.optional().nullable(),

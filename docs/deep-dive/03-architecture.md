@@ -174,3 +174,7 @@ This makes future clients simpler because they only need to implement one error 
 ## Swagger/OpenAPI
 
 Swagger is registered at `/docs`. It is for manual testing and API discovery. The raw OpenAPI document is exposed at `/openapi.json`.
+
+## Rich text formatting path
+
+Rich text is intentionally not treated as opaque client-only text. The server validates a versioned JSON document, stores it as a string column through Prisma/SQLite, and returns parsed JSON to API clients. This keeps formatting stable across clients while letting the database remain simple for local development.
