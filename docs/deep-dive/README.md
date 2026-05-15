@@ -32,3 +32,5 @@ After reading the deep dive, a developer should be able to:
 - modify Today dashboard rules;
 - write tests for a bug fix;
 - rebuild a similar Fastify + Prisma + Zod backend from scratch.
+
+The deep dive also covers server-side rich-text persistence: formatted descriptions and notes are validated as versioned JSON and stored through Prisma/SQLite companion fields.

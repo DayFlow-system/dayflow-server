@@ -30,3 +30,7 @@ The `tests` tree mirrors app layers: unit, service, repository, API, errors, and
 ## Deep dive
 
 For a beginner-friendly English, end-to-end explanation of how to rebuild and extend the same backend, see [`docs/deep-dive/README.md`](deep-dive/README.md).
+
+## Rich text formatting
+
+Formatted descriptions and day notes flow through the same module layers as other fields. Zod validates `descriptionRichText` / `notesRichText`, repositories serialize the document for SQLite, and mappers parse it back into response objects. Plain `description` and `notes` remain as fallback strings for search, previews, and simple clients.

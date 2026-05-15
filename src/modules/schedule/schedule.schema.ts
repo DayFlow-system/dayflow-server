@@ -1,9 +1,12 @@
 import { z } from 'zod';
 import { IMPORTANCE_LEVELS, SCHEDULE_STATUSES, SCHEDULE_TYPES } from '../../types/common.js';
+import { optionalRichTextDocumentSchema } from '../../utils/richText.js';
 import { timeSchema, validateTimeRange } from '../../utils/validation.js';
+
 const scheduleBaseSchema = z.object({
   title: z.string().trim().min(1),
   description: z.string().trim().optional().nullable(),
+  descriptionRichText: optionalRichTextDocumentSchema,
   dayOfWeek: z.number().int().min(1).max(7),
   startTime: timeSchema,
   endTime: timeSchema.optional().nullable(),

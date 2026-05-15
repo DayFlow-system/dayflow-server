@@ -24,3 +24,5 @@ If you only want to start quickly:
 3. Build a client with `API_BASE_URL = "http://localhost:3000"`.
 4. Implement `/today` first.
 5. Implement CRUD screens for tasks, events, schedule, and day state.
+
+Rich text formatting is part of the client contract: render `descriptionRichText` / `notesRichText` when present and keep plain fallback fields synchronized. See [`../RICH_TEXT.md`](../RICH_TEXT.md).

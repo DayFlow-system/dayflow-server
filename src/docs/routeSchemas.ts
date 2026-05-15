@@ -26,6 +26,95 @@ const timestamps = {
 } as const;
 
 const nullableString = { anyOf: [{ type: 'string' }, { type: 'null' }] } as const;
+
+const richTextMarks = {
+  type: 'object',
+  additionalProperties: false,
+  properties: {
+    bold: { type: 'boolean' },
+    italic: { type: 'boolean' },
+    underline: { type: 'boolean' },
+    color: {
+      type: 'string',
+      pattern: '^(#[0-9a-fA-F]{3}|#[0-9a-fA-F]{6}|[a-zA-Z][a-zA-Z0-9_-]{0,31})$',
+    },
+  },
+} as const;
+
+const richTextInlineNode = {
+  type: 'object',
+  required: ['type', 'text'],
+  additionalProperties: false,
+  properties: {
+    type: { const: 'text' },
+    text: { type: 'string' },
+    marks: richTextMarks,
+  },
+} as const;
+
+const richTextListItem = {
+  type: 'object',
+  required: ['children'],
+  additionalProperties: false,
+  properties: {
+    children: { type: 'array', items: richTextInlineNode },
+    blocks: { type: 'array', items: { type: 'object' } },
+  },
+} as const;
+
+const richTextBlock = {
+  anyOf: [
+    {
+      type: 'object',
+      required: ['type', 'children'],
+      additionalProperties: false,
+      properties: {
+        type: { const: 'paragraph' },
+        children: { type: 'array', items: richTextInlineNode },
+      },
+    },
+    {
+      type: 'object',
+      required: ['type', 'items'],
+      additionalProperties: false,
+      properties: {
+        type: { const: 'unordered_list' },
+        items: { type: 'array', items: richTextListItem },
+      },
+    },
+    {
+      type: 'object',
+      required: ['type', 'items'],
+      additionalProperties: false,
+      properties: {
+        type: { const: 'ordered_list' },
+        items: { type: 'array', items: richTextListItem },
+      },
+    },
+    {
+      type: 'object',
+      required: ['type', 'taskId', 'title'],
+      additionalProperties: false,
+      properties: {
+        type: { const: 'subtask_link' },
+        taskId: { type: 'string', format: 'uuid' },
+        title: { type: 'string', minLength: 1 },
+      },
+    },
+  ],
+} as const;
+
+const richTextDocument = {
+  type: 'object',
+  required: ['version', 'blocks'],
+  additionalProperties: false,
+  properties: {
+    version: { const: 1 },
+    blocks: { type: 'array', items: richTextBlock },
+  },
+} as const;
+
+const nullableRichTextDocument = { anyOf: [richTextDocument, { type: 'null' }] } as const;
 const nullableDate = { anyOf: [{ type: 'string', format: 'date' }, { type: 'null' }] } as const;
 
 const taskBody = {
@@ -34,6 +123,7 @@ const taskBody = {
   properties: {
     title: { type: 'string', minLength: 1 },
     description: nullableString,
+    descriptionRichText: nullableRichTextDocument,
     status: { type: 'string', enum: ['planned', 'in_progress', 'done', 'skipped', 'archived'] },
     type: { type: 'string', enum: ['task', 'study', 'health', 'routine', 'fun', 'admin'] },
     priority: { type: 'integer', minimum: 1, maximum: 5, default: 3 },
@@ -67,6 +157,7 @@ const eventBody = {
   properties: {
     title: { type: 'string', minLength: 1 },
     description: nullableString,
+    descriptionRichText: nullableRichTextDocument,
     date: { type: 'string', format: 'date' },
     startTime: nullableString,
     endTime: nullableString,
@@ -98,6 +189,7 @@ const scheduleBody = {
   properties: {
     title: { type: 'string', minLength: 1 },
     description: nullableString,
+    descriptionRichText: nullableRichTextDocument,
     dayOfWeek: { type: 'integer', minimum: 1, maximum: 7 },
     startTime: { type: 'string', pattern: '^([01]\\d|2[0-3]):[0-5]\\d$' },
     endTime: nullableString,
@@ -135,6 +227,7 @@ const dayStateBody = {
     energy: { type: 'string', enum: ['low', 'medium', 'high'], default: 'medium' },
     mood: { anyOf: [{ type: 'integer', minimum: 1, maximum: 5 }, { type: 'null' }] },
     notes: nullableString,
+    notesRichText: nullableRichTextDocument,
   },
 } as const;
 

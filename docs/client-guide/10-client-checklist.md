@@ -76,3 +76,10 @@ Use this checklist before calling a Dayflow client complete.
 - [ ] Destructive actions ask for confirmation.
 - [ ] Important enums are displayed as friendly labels.
 - [ ] Dates and times are displayed consistently.
+
+## Rich-text checklist
+
+- Render `descriptionRichText` / `notesRichText` when present.
+- Keep plain `description` / `notes` synchronized as fallbacks.
+- Send rich text as JSON objects, not JSON strings.
+- Use `null` to clear rich formatting and omit the field to leave it unchanged.

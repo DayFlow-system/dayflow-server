@@ -9,10 +9,33 @@ describe('day-state api', () => {
         await app.inject({
           method: 'PUT',
           url: '/day-state/today',
-          payload: { health: 'sick', energy: 'low' },
+          payload: {
+            health: 'sick',
+            energy: 'low',
+            notesRichText: {
+              version: 1,
+              blocks: [
+                {
+                  type: 'paragraph',
+                  children: [{ type: 'text', text: 'Rest', marks: { color: 'warning' } }],
+                },
+              ],
+            },
+          },
         })
-      ).json().health,
-    ).toBe('sick');
+      ).json(),
+    ).toMatchObject({
+      health: 'sick',
+      notesRichText: {
+        version: 1,
+        blocks: [
+          {
+            type: 'paragraph',
+            children: [{ type: 'text', text: 'Rest', marks: { color: 'warning' } }],
+          },
+        ],
+      },
+    });
     await app.close();
   });
 });

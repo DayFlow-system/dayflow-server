@@ -1,4 +1,6 @@
 import type { Prisma, PrismaClient } from '@prisma/client';
+import type { RichTextDocument } from '../../types/richText.js';
+import { serializeRichTextDocument } from '../../utils/richText.js';
 import { withoutUndefined } from '../../utils/object.js';
 import type { EventCreateInput, EventUpdateInput } from './event.schema.js';
 
@@ -18,17 +20,26 @@ export class EventRepository {
   }
 
   create(data: EventCreateInput) {
-    return this.db.event.create({ data: withoutUndefined(data) as Prisma.EventCreateInput });
+    return this.db.event.create({ data: normalizeRichTextInput(data) as Prisma.EventCreateInput });
   }
 
   update(id: string, data: EventUpdateInput) {
     return this.db.event.update({
       where: { id },
-      data: withoutUndefined(data) as Prisma.EventUpdateInput,
+      data: normalizeRichTextInput(data) as Prisma.EventUpdateInput,
     });
   }
 
   cancel(id: string) {
     return this.db.event.update({ where: { id }, data: { status: 'cancelled' } });
   }
+}
+
+function normalizeRichTextInput<T extends { descriptionRichText?: unknown }>(data: T) {
+  return withoutUndefined({
+    ...data,
+    descriptionRichText: serializeRichTextDocument(
+      data.descriptionRichText as RichTextDocument | null | undefined,
+    ),
+  });
 }

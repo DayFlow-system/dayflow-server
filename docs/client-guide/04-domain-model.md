@@ -2,6 +2,36 @@
 
 The client should understand the same domain as the server. This does not mean duplicating all server logic, but the UI needs to present fields correctly.
 
+## RichTextDocument
+
+Formatted task/event/schedule descriptions and day notes use the same rich-text document shape. The client can keep `description`/`notes` as plain-text fallbacks while rendering and editing the rich companion field.
+
+```ts
+type RichTextDocument = {
+  version: 1;
+  blocks: RichTextBlock[];
+};
+
+type RichTextBlock =
+  | { type: 'paragraph'; children: RichTextInlineNode[] }
+  | { type: 'unordered_list'; items: RichTextListItem[] }
+  | { type: 'ordered_list'; items: RichTextListItem[] }
+  | { type: 'subtask_link'; taskId: string; title: string };
+
+type RichTextListItem = {
+  children: RichTextInlineNode[];
+  blocks?: Extract<RichTextBlock, { type: 'unordered_list' | 'ordered_list' }>[];
+};
+
+type RichTextInlineNode = {
+  type: 'text';
+  text: string;
+  marks?: { bold?: boolean; italic?: boolean; underline?: boolean; color?: string };
+};
+```
+
+See [`../RICH_TEXT.md`](../RICH_TEXT.md) for persistence and compatibility rules.
+
 ## Task
 
 Task fields:
@@ -11,6 +41,7 @@ type Task = {
   id: string;
   title: string;
   description: string | null;
+  descriptionRichText: RichTextDocument | null;
   status: 'planned' | 'in_progress' | 'done' | 'skipped' | 'archived';
   type: 'task' | 'study' | 'health' | 'routine' | 'fun' | 'admin';
   priority: 1 | 2 | 3 | 4 | 5;
@@ -29,7 +60,8 @@ UI hints:
 - show `priority` as 1–5 or low-to-high indicator;
 - make `deadline` visually prominent;
 - hide or separate `archived` tasks in default lists;
-- allow quick status changes.
+- allow quick status changes;
+- render `descriptionRichText` when present and fall back to `description` otherwise.
 
 ## Event
 
@@ -38,6 +70,7 @@ type Event = {
   id: string;
   title: string;
   description: string | null;
+  descriptionRichText: RichTextDocument | null;
   date: string;
   startTime: string | null;
   endTime: string | null;
@@ -62,6 +95,7 @@ type ScheduleBlock = {
   id: string;
   title: string;
   description: string | null;
+  descriptionRichText: RichTextDocument | null;
   dayOfWeek: 1 | 2 | 3 | 4 | 5 | 6 | 7;
   startTime: string;
   endTime: string | null;
@@ -90,6 +124,7 @@ type DayState = {
   energy: 'low' | 'medium' | 'high';
   mood: number | null;
   notes: string | null;
+  notesRichText: RichTextDocument | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -99,7 +134,7 @@ UI hints:
 
 - make health and energy easy to change;
 - show mood as 1–5;
-- notes can be a textarea.
+- notes can be a rich-text editor backed by `notesRichText`, with `notes` as a textarea-style fallback.
 
 ## TodayDashboard
 

@@ -42,3 +42,5 @@
 ## Add a test
 
 Choose the narrowest test layer first. Use regression tests only for fixed bugs that should never return.
+
+When changing user-facing text fields, update both plain fallback fields and rich-text companion fields (`descriptionRichText` / `notesRichText`) plus [`RICH_TEXT.md`](RICH_TEXT.md).

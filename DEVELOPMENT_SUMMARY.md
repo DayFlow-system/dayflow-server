@@ -30,3 +30,5 @@ Available commands: `dev`, `build`, `start`, `test`, `test:watch`, `prisma:gener
 - Add Telegram bot adapters as a separate integration layer.
 - Add PWA/Desktop clients against the documented HTTP API.
 - Add more regression tests when real usage reveals edge cases.
+
+Rich-text formatted descriptions and notes are supported through versioned JSON companion fields and documented in `docs/RICH_TEXT.md`.
