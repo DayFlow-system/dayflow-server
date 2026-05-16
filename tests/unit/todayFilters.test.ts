@@ -11,6 +11,7 @@ const base = {
   id: '1',
   title: 'A',
   description: null,
+  descriptionRichText: null,
   status: 'planned',
   type: 'task',
   priority: 1,

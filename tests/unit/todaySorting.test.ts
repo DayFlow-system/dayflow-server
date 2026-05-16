@@ -13,6 +13,7 @@ const makeTask = (
   id,
   title: id,
   description: null,
+  descriptionRichText: null,
   status: 'planned',
   type: 'task',
   priority,
